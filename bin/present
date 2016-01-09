@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require "webrick"
+
+talk = ARGV[0]
+template = DATA.read
+
+server = WEBrick::HTTPServer.new Port: 8000
+
+server.mount_proc '/' do |req, res|
+  data = File.read(File.join("talks", talk, "slides.md"))
+  res.body = template.sub("SOURCE", data)
+end
+
+server.start
+
+__END__
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>expect(test).to reveal_intent</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <textarea id="source">SOURCE</textarea>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
