@@ -236,7 +236,9 @@ expect(test).to reveal_implementation
 
 # Thanks!
 
+  * Slides: [github.com/bernerdschaefer/talks][talks]
   * Follow me: [@bjschaefer](https://twitter.com/bjschaefer)
   * Email me: [b@thoughtbot.com](mailto:b@thoughtbot.com)
   * Hire me: [https://thoughtbot.com/](https://thoughtbot.com/)
 
+  [talks]: https://github.com/bernerdschaefer/talks
