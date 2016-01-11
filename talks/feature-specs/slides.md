@@ -2,7 +2,7 @@ class: center, middle
 
 # expect(test).to reveal_intent
 
-.footnote[Bernerd Schaefer / Development Director @ thoughtbot]
+.footnote[Bernerd Schaefer / Developer @ thoughtbot]
 
 ---
 
@@ -109,7 +109,319 @@ end
 
 ---
 
-# Code Break
+# Factory Girl
+
+---
+
+# Factory Girl
+
+```ruby
+subscription = create(:subscription, active: true)
+create(
+  :user,
+  github_username: "githubuser",
+  github_token: "123",
+  subscription: subscription,
+)
+```
+
+---
+
+# Convey state or type with nested factories
+
+---
+
+# Convey state or type with nested factories
+
+```ruby
+subscription = create(:subscription)
+create(:user, subscription: subscription)
+```
+
+---
+
+# Convey state or type with nested factories
+
+```ruby
+factory :user do
+  factory :subscriber do
+    subscription
+  end
+end
+
+create(:subscriber)
+```
+
+---
+
+# Group attributes with traits
+
+---
+
+# Group attributes with traits
+
+```ruby
+create(
+  :user,
+  github_username: "githubuser",
+  github_token: "123",
+)
+```
+
+---
+
+# Group attributes with traits
+
+```ruby
+factory :user do
+  trait :with_github_identity do
+    github_username "githubuser"
+    github_token "123"
+  end
+end
+
+create(:user, :with_github_identity)
+```
+
+---
+
+# Let's refactor
+
+---
+
+# Let's refactor
+
+```ruby
+create(:user, admin: true)
+```
+
+---
+
+# Let's refactor
+
+```ruby
+factory :user do
+  factory :admin do
+    admin true
+  end
+end
+
+create(:admin)
+```
+
+---
+
+# Let's refactor
+
+```ruby
+create(:job, starts_on: 1.year.ago, ends_on: 2.months.ago)
+create(:job, starts_on: 1.month.ago, ends_on: nil)
+```
+
+---
+
+# Let's refactor
+
+```ruby
+create(:job, :current)
+create(:job, :previous)
+
+factory :job do
+  trait :previous do
+    starts_on { 1.year ago }
+    ends_on { 2.months.ago }
+  end
+
+  trait :current do
+    starts_on { 1.month.ago }
+    ends_on nil
+  end
+end
+```
+
+---
+
+# RSpec and Capybara
+
+---
+
+# Extract actions
+
+---
+
+# Extract actions
+
+```ruby
+fill_in "Email", with: user.email
+fill_in "Password", with: "test"
+click_on "Sign In"
+```
+
+---
+
+# Extract actions
+
+```ruby
+sign_in_as(user)
+
+def sign_in_as(user)
+  fill_in "Email", with: user.email
+  fill_in "Password", with: "test"
+  click_on "Sign In"
+end
+```
+
+---
+
+# Extract matchers
+
+---
+
+# Extract matchers
+
+```ruby
+expect(page).to have_css(".jobs .current", text: job.title)
+```
+
+---
+
+# Extract matchers
+
+```ruby
+expect(page).to have_current_job(job)
+
+def have_current_job(job)
+  expect(page).to have_css(".jobs .current", text: job.title)
+end
+```
+
+---
+
+# Extract expectations
+
+---
+
+# Extract expectations
+
+```ruby
+ordered_job_titles = Job.order(starts_on: :desc).map(&:title)
+job_titles = all(".job .title").map(&:text)
+expect(job_titles).to eq(ordered_job_titles)
+```
+
+---
+
+# Extract expectations
+
+```ruby
+expect_jobs_in_reverse_chronological_order
+
+def expect_jobs_in_reverse_chronological_order
+  ordered_job_titles = Job.order(starts_on: :desc).map(&:title)
+  job_titles = all(".job .title").map(&:text)
+  expect(job_titles).to eq(ordered_job_titles)
+end
+```
+
+---
+
+# Let's refactor
+
+---
+
+# Let's refactor
+
+```ruby
+expect(page).to have_css(".job.current")
+```
+
+---
+
+# Let's refactor
+
+```ruby
+click_on "Add article"
+expect(page).not_to have_css(
+  ".tooltip_list-link_add", text: article.name
+)
+expect(page).to have_css(
+  ".tooltip_list-link_remove", text: article.name
+)
+```
+
+---
+
+# Extract page objects
+
+---
+
+# Page objects wrap part or all of a page with a user-focused API
+
+---
+
+# Extract page objects
+
+```ruby
+within "#charge-#{charge.id}" do
+  expect(page).to have_text("Pending")
+
+  click_on "Cancel"
+
+  expect(page).to have_text("Canceled"))
+end
+```
+
+---
+
+# Extract page objects
+
+```ruby
+payment_page = PaymentPage.new
+
+expect(payment_page).to have_pending_charge(charge)
+payment_page.cancel_charge(charge)
+expect(payment_page).to have_canceled_charge(charge)
+```
+
+---
+
+# Extract page objects
+
+```ruby
+class PaymentPage
+  include Capybara::DSL
+
+  def cancel_charge(charge)
+    within_charge(charge) do
+      click_on "Cancel"
+    end
+  end
+
+  def has_pending_charge?(charge)
+    within_charge(charge) do
+      expect(page).to have_text("Pending")
+    end
+  end
+
+  def has_canceled_charge?(charge)
+    within_charge(charge) do
+      expect(page).to have_text("Canceled")
+    end
+  end
+end
+```
+
+---
+
+# Let's refactor
+
+```ruby
+visit my_account_path
+click_link "Cancel subscription"
+fill_in "cancellation_reason", with: "I didn't like it"
+click_button "Confirm subscription cancelation"
+expect(page).to have_text "Subscription canceled"
+```
 
 ---
 
@@ -117,19 +429,24 @@ end
 
 ---
 
+# Nested factories
+
 Prefer
 
 ```ruby
-create(:admin)
+create(:subscriber)
 ```
 
 To
 
 ```ruby
-create(:user, admin: true)
+subscription = create(:subscription)
+create(:user, subscription: subscription)
 ```
 
 ---
+
+# Traits
 
 Prefer
 
@@ -145,6 +462,26 @@ create(:user, github_username: "githubuser", github_token: "123")
 
 ---
 
+# Actions
+
+Prefer
+
+```ruby
+sign_in_as(user)
+```
+
+To
+
+```ruby
+fill_in "Email", with: user.email
+fill_in "Password", with: "test"
+click_on "Sign In"
+```
+
+---
+
+# Expectations
+
 Prefer
 
 ```ruby
@@ -158,6 +495,8 @@ expect(page).to have_text "Signed in"
 ```
 
 ---
+
+# Matchers
 
 Prefer
 
@@ -173,28 +512,7 @@ expect(page).to have_css(".active")
 
 ---
 
-Prefer
-
-```ruby
-cancel_payment_page = CancelPaymentPage.new
-
-cancel_payment_page.cancel_charge(charge)
-
-expect(cancel_payment_page).to have_canceled_charge(charge)
-```
-
-To
-
-```ruby
-within "#charge-#{charge.id}" do
-  click_on t("charges.index.cancel")
-
-  expect(page).to have_text(t("charges.index.canceled_charge"))
-end
-
-```
-
----
+# Page objects
 
 Prefer
 
@@ -219,6 +537,8 @@ expect(page).to have_css?("#payment_credit_card .error")
 ```
 
 ---
+
+# Always
 
 Prefer
 
