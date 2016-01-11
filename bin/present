@@ -8,7 +8,7 @@ template = DATA.read
 server = WEBrick::HTTPServer.new Port: 8000
 
 server.mount_proc '/' do |req, res|
-  data = File.read(File.join("talks", talk, "slides.md"))
+  data = File.read(File.join(talk, "slides.md"))
   res.body = template.sub("SOURCE", data)
 end
 
