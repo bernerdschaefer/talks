@@ -143,13 +143,19 @@ create(:user, subscription: subscription)
 # Convey state or type with nested factories
 
 ```ruby
+create(:subscriber)
+```
+
+---
+
+# Convey state or type with nested factories
+
+```ruby
 factory :user do
   factory :subscriber do
     subscription
   end
 end
-
-create(:subscriber)
 ```
 
 ---
@@ -173,16 +179,38 @@ create(
 # Group attributes with traits
 
 ```ruby
+create(:user, :with_github_identity)
+```
+
+---
+
+# Group attributes with traits
+
+```ruby
 factory :user do
   trait :with_github_identity do
     github_username "githubuser"
     github_token "123"
   end
 end
-
-create(:user, :with_github_identity)
 ```
 
+---
+
+# Factory Girl
+
+```ruby
+create(:subscriber, :with_github_identity)
+
+# instead of
+subscription = create(:subscription, active: true)
+create(
+  :user,
+  github_username: "githubuser",
+  github_token: "123",
+  subscription: subscription,
+)
+```
 ---
 
 # Let's refactor
@@ -242,7 +270,7 @@ expect(page).to have_css(".jobs .current", text: job.title)
 expect(page).to have_current_job(job)
 
 def have_current_job(job)
-  expect(page).to have_css(".jobs .current", text: job.title)
+  have_css(".jobs .current", text: job.title)
 end
 ```
 
@@ -332,13 +360,13 @@ class PaymentPage
 
   def has_pending_charge?(charge)
     within_charge(charge) do
-      expect(page).to have_text("Pending")
+      has_text?("Pending")
     end
   end
 
   def has_canceled_charge?(charge)
     within_charge(charge) do
-      expect(page).to have_text("Canceled")
+      has_text?("Canceled")
     end
   end
 end
