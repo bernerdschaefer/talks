@@ -187,57 +187,8 @@ create(:user, :with_github_identity)
 
 # Let's refactor
 
----
-
-# Let's refactor
-
-```ruby
-create(:user, admin: true)
-```
-
----
-
-# Let's refactor
-
-```ruby
-factory :user do
-  factory :admin do
-    admin true
-  end
-end
-
-create(:admin)
-```
-
----
-
-# Let's refactor
-
-```ruby
-create(:job, starts_on: 1.year.ago, ends_on: 2.months.ago)
-create(:job, starts_on: 1.month.ago, ends_on: nil)
-```
-
----
-
-# Let's refactor
-
-```ruby
-create(:job, :current)
-create(:job, :previous)
-
-factory :job do
-  trait :previous do
-    starts_on { 1.year ago }
-    ends_on { 2.months.ago }
-  end
-
-  trait :current do
-    starts_on { 1.month.ago }
-    ends_on nil
-  end
-end
-```
+* samples/01.rb
+* samples/02.rb
 
 ---
 
@@ -327,27 +278,9 @@ end
 
 # Let's refactor
 
----
-
-# Let's refactor
-
-```ruby
-expect(page).to have_css(".job.current")
-```
-
----
-
-# Let's refactor
-
-```ruby
-click_on "Add article"
-expect(page).not_to have_css(
-  ".tooltip_list-link_add", text: article.name
-)
-expect(page).to have_css(
-  ".tooltip_list-link_remove", text: article.name
-)
-```
+* samples/03.rb
+* samples/04.rb
+* samples/05.rb
 
 ---
 
@@ -415,13 +348,9 @@ end
 
 # Let's refactor
 
-```ruby
-visit my_account_path
-click_link "Cancel subscription"
-fill_in "cancellation_reason", with: "I didn't like it"
-click_button "Confirm subscription cancelation"
-expect(page).to have_text "Subscription canceled"
-```
+* samples/06.rb
+* samples/07.rb
+* samples/08.rb
 
 ---
 
