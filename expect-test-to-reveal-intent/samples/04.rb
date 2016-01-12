@@ -1,7 +1,7 @@
 click_on "Add article"
 expect(page).not_to have_css(
-  ".tooltip_list-link_add", text: article.name
+  ".add_article", text: article.name
 )
 expect(page).to have_css(
-  ".tooltip_list-link_remove", text: article.name
+  ".remove_article", text: article.name
 )
