@@ -187,8 +187,8 @@ create(:user, :with_github_identity)
 
 # Let's refactor
 
-* [samples/01.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/01.rb)
-* [samples/02.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/02.rb)
+* [samples/01.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/01.rb)
+* [samples/02.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/02.rb)
 
 ---
 
@@ -278,9 +278,9 @@ end
 
 # Let's refactor
 
-* [samples/03.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/03.rb)
-* [samples/04.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/04.rb)
-* [samples/05.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/05.rb)
+* [samples/03.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/03.rb)
+* [samples/04.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/04.rb)
+* [samples/05.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/05.rb)
 
 ---
 
@@ -348,9 +348,9 @@ end
 
 # Let's refactor
 
-* [samples/06.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/06.rb)
-* [samples/07.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/07.rb)
-* [samples/08.rb](https://raw.githubusercontent.com/bernerdschaefer/talks/master/expect-test-to-reveal-intent/samples/08.rb)
+* [samples/06.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/06.rb)
+* [samples/07.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/07.rb)
+* [samples/08.rb](https://github.com/bernerdschaefer/talks/blob/master/expect-test-to-reveal-intent/samples/08.rb)
 
 ---
 
