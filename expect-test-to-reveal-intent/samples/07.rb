@@ -1,4 +1,4 @@
-scenario "User loads more articles" do
+scenario "loads articles in order" do
   user = create(:user)
   create(:article, headline: "first")
   create(:article, headline: "second")
@@ -6,15 +6,32 @@ scenario "User loads more articles" do
   login_as user
   visit articles_path
 
-  expect(all(".headline").map(&:text)).to eq([
+  articles_page = ArticlesPage.new
+
+  expect(articles_page.extract_headlines).to eq([
     "first",
   ])
 
-  click_on "Load more"
+  article_page.load_more
 
-  expect(all(".headline").map(&:text)).to eq([
+  expect(articles_page.extract_headlines).to eq([
     "first",
     "second",
   ])
-  expect(page).not_to have_text "Load more"
+
+  expect(article_page).to be_completely_loaded
+end
+
+class ArticlesPage
+  def extract_headlines
+    all(".headline").map(&:text)
+  end
+
+  def load_more
+    click_on "Load more"
+  end
+
+  def is_completely_loaded?
+    !has_text?("Load more")
+  end
 end

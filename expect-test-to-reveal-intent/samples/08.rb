@@ -1,18 +1,40 @@
-scenario "Admin makes a user an admin" do
-  admin = create(:user, admin: true)
-  user = create(:user)
+feature "foo" do
+  scenario "Admin makes a user an admin" do
+    login_as_admin
+    user = create(:user)
 
-  visit users_path
+    visit users_path
+    users_page = UsersPage.new
 
-  within "#user_#{user.id}" do
-    expect(page).not_to have_text("Admin")
-    click_on "Edit"
+    expect(users_page).not_to have_admin(user)
+
+    users_page.show_edit_form_for(user)
+    users_page.make_admin
+    # users_page.change_role_to("Admin")
+
+    expect(users_page).to have_admin(user)
   end
 
-  check "Admin"
-  click_on "Update"
+  def login_as_admin
+    # ...
+  end
+end
 
-  within "#user_#{user.id}" do
-    expect(page).to have_text("Admin")
+class UsersPage
+  def has_admin?(user)
+    within "#user_#{user.id}" do
+      has_text?("Admin")
+    end
+  end
+
+  def make_admin
+    update_role("Admin")
+  end
+
+  private
+
+  def update_role(role)
+    click role
+    click "Update"
   end
 end
