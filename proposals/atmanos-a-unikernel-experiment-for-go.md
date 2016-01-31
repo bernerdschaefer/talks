@@ -1,13 +1,16 @@
-# AtmanOS: A unikernel experiment for Go
+# Go without the operating system
 
-What would a unikernel for Go, written in Go, look like?
+Go lets you to compile your program into stand-alone binaries which can be
+safely shared across systems without worrying about a missing dependency. But
+there's one thing even a stand-alone executable depends on: the operating
+system. What if you could remove that dependency, too?
 
 AtmanOS is a project built to explore that question. It allows you to compile
 ordinary Go programs and run them on cloud providers like Amazon's EC2, without
 a traditional operating system.
 
-Let's explore how it works, how and why you might want to use it, and some of
-the open questions for taking unikernels to production.
+Let's explore how it works, how to use it, and some condierations for putting
+it into production.
 
 Notes for Organizers
 --------------------
@@ -48,5 +51,5 @@ with a mix of slides and live demos:
 - Writing Go applications with unikernels in mind
 - Deploying to Xen and cloud providers
   - Live: build, deploy to EC2, hit in a browser?
-- Open questions
+- Unsolved problems / areas for further research
   - Logging, debugging, configuration, etc.
