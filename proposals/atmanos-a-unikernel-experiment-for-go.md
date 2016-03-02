@@ -53,3 +53,8 @@ with a mix of slides and live demos:
   - Live: build, deploy to EC2, hit in a browser?
 - Unsolved problems / areas for further research
   - Logging, debugging, configuration, etc.
+
+Bio
+---
+
+Bernerd leads the team at thoughtbot in Portland, where he helps clients build great digital products. He prefers to spend his nights and weekends hiking in Forest Park and cooking up tasty meals at home, as well as hacking on personal projects like AtmanOS.
