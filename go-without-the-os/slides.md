@@ -113,14 +113,6 @@
 
 ---
 
-### Memory Management
-### Locking Primitives
-### Process Scheduling
-### Events
-### Device Drivers
-
----
-
 # [fit] Function calls
 # [fit] not system calls
 
@@ -159,4 +151,36 @@ func (t *timeInfo) nanotime() int64 {
 	t.checkSystemTime()
 	return int64(t.SystemNsec) + t.nsSinceSystem()
 }
+```
+
+---
+
+### Memory Management
+### Locking Primitives
+### Process Scheduling
+### Events
+### Device Drivers
+
+---
+
+# Memory Management
+
+```go
+type atmanMemoryManager struct {}
+
+func (*atmanMemoryManager) allocPage(page vaddr)
+func (*atmanMemoryManager) allocPages(v unsafe.Pointer, n uint64) unsafe.Pointer
+func (*atmanMemoryManager) clearPage(pfn pfn)
+func (*atmanMemoryManager) physAllocPage() pfn
+func (*atmanMemoryManager) reserveHeapPages(n uint64) unsafe.Pointer
+func (*atmanMemoryManager) reservePFN() pfn
+
+func (*atmanMemoryManager) unmapBootstrapPageTables()
+func (*atmanMemoryManager) unmapLowAddresses()
+func (*atmanMemoryManager) getPageTable(a, b, c int) xenPageTable
+func (*atmanMemoryManager) init()
+func (*atmanMemoryManager) mapL4(pfn pfn) xenPageTable
+func (*atmanMemoryManager) mmuExtOp(ops []mmuExtOp)
+func (*atmanMemoryManager) pageTableWalk(addr vaddr)
+func (*atmanMemoryManager) writePte(table pfn, offset int, value pfn, flags uintptr) pageTableEntry
 ```
