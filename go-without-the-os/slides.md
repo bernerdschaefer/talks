@@ -92,16 +92,12 @@
 
 ---
 
-## Build Go programs
-## to run directly on Xen
+# Go ported to run on Xen
 
 ---
 
-## [fit] `atman build ./hello`
-
----
-
-# AtmanOS is Go<br>ported to Xen
+# `runtime`
+# as a kernel
 
 ---
 
@@ -110,6 +106,47 @@
 ---
 
 # [fit] <200 lines of assembly
+
+---
+
+# What's in a port?
+
+---
+
+# Memory Management
+
+```go
+func sysAlloc(
+  n uintptr, sysStat *uint64) unsafe.Pointer
+
+func sysMap(
+  v unsafe.Pointer, n uintptr, reserved bool, sysStat *uint64)
+
+func sysFree(
+  v unsafe.Pointer, n uintptr, sysStat *uint64) {}
+```
+
+---
+
+# Locking Primitives
+
+```go
+func semacreate() uintptr
+
+func semasleep(ns int64) int32
+
+func semawakeup(mp *m)
+```
+
+---
+
+# Processes
+
+```go
+func newosproc(mp *m, stk unsafe.Pointer)
+
+func osyield()
+```
 
 ---
 
@@ -155,10 +192,9 @@ func (t *timeInfo) nanotime() int64 {
 
 ---
 
-### Memory Management
-### Locking Primitives
-### Process Scheduling
-### Events
+### Memory Manager
+### Process Scheduler
+### Locks
 ### Device Drivers
 
 ---
@@ -168,19 +204,82 @@ func (t *timeInfo) nanotime() int64 {
 ```go
 type atmanMemoryManager struct {}
 
-func (*atmanMemoryManager) allocPage(page vaddr)
 func (*atmanMemoryManager) allocPages(v unsafe.Pointer, n uint64) unsafe.Pointer
+func (*atmanMemoryManager) allocPage(page vaddr)
 func (*atmanMemoryManager) clearPage(pfn pfn)
 func (*atmanMemoryManager) physAllocPage() pfn
 func (*atmanMemoryManager) reserveHeapPages(n uint64) unsafe.Pointer
 func (*atmanMemoryManager) reservePFN() pfn
-
-func (*atmanMemoryManager) unmapBootstrapPageTables()
-func (*atmanMemoryManager) unmapLowAddresses()
-func (*atmanMemoryManager) getPageTable(a, b, c int) xenPageTable
-func (*atmanMemoryManager) init()
-func (*atmanMemoryManager) mapL4(pfn pfn) xenPageTable
-func (*atmanMemoryManager) mmuExtOp(ops []mmuExtOp)
-func (*atmanMemoryManager) pageTableWalk(addr vaddr)
-func (*atmanMemoryManager) writePte(table pfn, offset int, value pfn, flags uintptr) pageTableEntry
+...
 ```
+
+---
+
+## [fit] `atman build -o kernel ./hello`
+
+---
+
+# `file kernel`
+
+```
+kernel: ELF 64-bit LSB executable,
+        x86-64,
+        version 1 (SYSV),
+        statically linked,
+        not stripped
+```
+
+---
+
+# `readelf --sections kernel`
+
+```
+  ...
+  [12] .note.Xen.loader  NOTE             0000000000400fb0  00000fb0
+       0000000000000018  0000000000000000   A       0     0     4
+  [13] .note.Xen.version NOTE             0000000000400f98  00000f98
+       0000000000000018  0000000000000000   A       0     0     4
+  [14] .note.Xen.hyperca NOTE             0000000000400f80  00000f80
+       0000000000000018  0000000000000000   A       0     0     4
+  ...
+```
+
+---
+
+# `xl create --console config.xl`
+
+```
+Atman OS
+     ptr_size:  8
+   start_info:  0x5bd000
+    ...
+    first_pfn:  0
+nr_p2m_frames:  0
+
+Hello, world
+The current time is 2016-04-26 03:03:08.78049478 +0000 UTC
+```
+
+---
+
+# Kernel size: 2.2MB
+
+---
+
+# [fit] DEMO
+
+---
+
+# What's next?
+
+---
+
+# TCP/IP stack
+
+---
+
+# `net`
+
+---
+
+# Filesystem?
