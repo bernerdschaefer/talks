@@ -43,16 +43,25 @@
 ## Hardware
 ## *Operating System*
 
+^ Interfaces with the Hardware
+  Drivers...
+  Userspace
+
 ---
 
 ## Hardware
 ## Operating System
 ## *User Applications*
 
+^ Where what you're paid for runs
+
 ---
 
 ## The operating system
 ## allows programs to share hardware
+
+^ Safe, hopefully transparent
+  How many people deploy this way?
 
 ---
 
@@ -110,11 +119,14 @@
 
 ## General Purpose Computing Environment
 
+^ POSIX, shell scripting...
+
 ---
 
 ## Known Tools
 
 ^ No SSH
+  The flip side...
 
 ---
 
@@ -158,8 +170,33 @@
 # Port of Go
 # for Xen
 
-^ Xen is a popular hypervisor, used by EC2, Linode, Rackspace.
-  Lets you cross-compile unmodified Go programs, just like for Linux and Windows.
+^ Lets you cross-compile unmodified Go programs, just like for Linux and Windows,
+  to run direclty on Xen.
+
+---
+
+# Xen
+
+^ Hypervisor
+
+---
+
+# Host OS
+## (Linux or BSD)
+
+^ Provides drivers and priveledged code
+
+---
+
+# Hypercalls
+
+^ Exposes priveleged operations, like system calls
+
+---
+
+# Shared memory
+
+^ Provides access to shared data, and drivers
 
 ---
 
@@ -170,7 +207,7 @@
 
 ---
 
-# Porting the runtime
+# Porting Go
 
 ^ Go's runtime provides a number of hooks,
   in the form of stub methods,
@@ -290,24 +327,6 @@ func sysMap(v unsafe.Pointer, n uintptr, reserved bool, sysStat *uint64) {
 
 ---
 
-# `time_atman.go`
-
-```go
-func _nanotime() (ns int64) {
-	systemstack(func() { ns = shadowTimeInfo.nanotime() })
-	return ns
-}
-
-func (t *timeInfo) nanotime() int64 {
-	t.checkSystemTime()
-	return int64(t.SystemNsec) + t.nsSinceSystem()
-}
-```
-
-^ If we follow these calls down
-
----
-
 ### Memory Manager
 ### Time
 ### Locks
@@ -334,51 +353,7 @@ func (*atmanMemoryManager) reservePFN() pfn
 
 ---
 
-# [fit] `nanotime() int64`
-
----
-
-```go
-//go:nosplit
-func nanotime() int64 {
-	var ns int64
-
-	systemstack(func() {
-		ns = shadowTimeInfo.nanotime()
-	})
-
-	return ns
-}
-```
-
----
-
-```go
-func (t *timeInfo) nanotime() int64 {
-	t.checkSystemTime()
-
-	return int64(t.SystemNsec) + t.nsSinceSystem()
-}
-```
-
----
-
-```go
-func (t *timeInfo) checkSystemTime() {
-	src := &_atman_shared_info.VCPUInfo[0].Time
-
-	for t.needsUpdate(&t.SystemVersion, &src.Version) {
-		t.SystemVersion = src.Version
-
-		lfence()
-		t.SystemNsec = src.SystemNsec
-		t.TSC = src.TSC
-		t.TSCMul = src.TSCMul
-		t.TSCShift = src.TSCShift
-		lfence()
-	}
-}
-```
+# [fit] CODE WALK
 
 ---
 
@@ -387,57 +362,6 @@ func (t *timeInfo) checkSystemTime() {
 ---
 
 # [fit] 200 lines of assembly
-
----
-
-## [fit] `atman build -o kernel ./hello`
-
----
-
-# `file kernel`
-
-```
-kernel: ELF 64-bit LSB executable,
-        x86-64,
-        version 1 (SYSV),
-        statically linked,
-        not stripped
-```
-
----
-
-# `readelf --sections kernel`
-
-```
-  ...
-  [12] .note.Xen.loader  NOTE             0000000000400fb0  00000fb0
-       0000000000000018  0000000000000000   A       0     0     4
-  [13] .note.Xen.version NOTE             0000000000400f98  00000f98
-       0000000000000018  0000000000000000   A       0     0     4
-  [14] .note.Xen.hyperca NOTE             0000000000400f80  00000f80
-       0000000000000018  0000000000000000   A       0     0     4
-  ...
-```
-
----
-
-# `xl create --console config.xl`
-
-```
-Atman OS
-     ptr_size:  8
-   start_info:  0x5bd000
-    ...
-    first_pfn:  0
-nr_p2m_frames:  0
-
-Hello, world
-The current time is 2016-04-26 03:03:08.78049478 +0000 UTC
-```
-
----
-
-# Kernel size: 2.2MB
 
 ---
 
@@ -455,18 +379,40 @@ The current time is 2016-04-26 03:03:08.78049478 +0000 UTC
   I want to do this in a demo, but I couldn't get Amazon
   to recognize the disk image.
   It's also Linux only...
+  Anyone have experience with pv-grub or building custom kernels for Amazon?
+
+---
+
+# Console input
+
+^ Read console from userland via syscall package.
+  Small change, but the will provide a model for blocking I/O
+
+---
+
+# `pprof`
+
+^ We could profile app and OS together!
 
 ---
 
 # TCP/IP stack
+# and `net`
 
 ^ The largest subsystem in Atman, and the first which can live
   almost entirely outside of the runtime.
-
----
-
-# `net`
+  Lots of room to explore Go-native approaches.
 
 ---
 
 # Filesystems?
+
+^ Maybe?
+
+---
+
+# Questions?
+
+---
+
+# Thanks!
