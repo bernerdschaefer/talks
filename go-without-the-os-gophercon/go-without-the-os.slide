@@ -141,12 +141,6 @@ Shared memory
 
   func osyield()
 
-* I/O
-
-  func read(fd int32, buf unsafe.Pointer, n int32) int32
-
-  func write(fd uintptr, buf unsafe.Pointer, n int32) int64
-
 * sys_freebsd_amd64.s
 
   TEXT runtime·nanotime(SB), NOSPLIT, $32
