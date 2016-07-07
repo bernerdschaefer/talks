@@ -52,30 +52,21 @@ These hypervisor-aware applications are called *unikernels*.
 
 Where operating systems are general purpose, unikernels are highly specialized.
 
+They take a number of forms. Some are for OS research. Others target particular language runtimes, like Haskell and Erlang. And, of course, Go!
+
 * AtmanOS
 
-* Port of Go for Xen
+* AtmanOS
 
-: Lets you cross-compile unmodified Go programs, just like for Linux and Windows,
-: to run direclty on Xen.
+It allows you to cross-compile Go programs, just like for Linux and Windows, to run directly on the Xen hypervisor.
 
-Xen is a Hypervisor
+The compiled images can be deployed on Amazon EC2, Linode, Rackspace, and IBM SoftLayer.
 
-It runs a "Host OS" (Linux of BSD) which provides drivers and executes
-priveledged code.
+There are a few pieces to AtmanOS:
 
-Hypercalls
-
-: Exposes priveleged operations, like system calls
-
-Shared memory
-
-: Provides access to shared data, and drivers
-
-- Amazon EC2
-- Linode
-- Rackspace
-- IBM SoftLayer
+- a microkernel implemented in Go (and a little assembly)
+- a suite of system packages, for communicating with Xen, reading and writing network packets, etc.
+- a port of Go's runtime and standard library
 
 * Porting Go
 
