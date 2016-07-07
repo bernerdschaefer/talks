@@ -23,9 +23,7 @@ A *hypervisor* allows *multiple*operating*systems* to safely interface with and 
 
 The *operating*system* duplicates work, allowing user applications to share hardware that's already shared (or even virtualized).
 
-If user applications interfaced directly with the hypervisor, we could remove the operating system.
-
-* What would we give up?
+* Operating systems do a lot
 
 Operating systems do a lot more than manage hardware.
 
@@ -46,13 +44,13 @@ These strongly impact:
 - Performance
 - Security (see Heartbleed, Shellshock, ImageTragick)
 
-* Without the OS
+* Without the Operating System
 
-## Hardware
-## Hypervisor
-## *User Applications*
+We can remove the operating system if we run user applications that interface directly with the hypervisor.
 
-: Okay. You buy this. How can you do it? And do it in Go?
+These hypervisor-aware applications are called *unikernels*.
+
+Where operating systems are general purpose, unikernels are highly specialized.
 
 * AtmanOS
 
