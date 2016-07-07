@@ -7,65 +7,37 @@ b@thoughtbot.com
 
 * Without the Operating System?
 
-: Operating systems do many useful things.
-: Understand in context.
-: We're all at the Go meetup, so we know why we're talking about "Go".
-: But why are we talking about OSes?
-
-
 * Conventional deployment
 
-- Hardware
-: Server in a closet or datacenter
-- Operating System
-: Interfaces with the Hardware, drivers, userspace
-- *User*Applications*
-: Where what you're paid for runs
+There's some physical *hardware* in a data-center (or closet).
 
-The operating system allows programs to share hardware.
+We want to run *multiple*user*applications* on that hardware.
 
-: Safe, hopefully transparent How many people deploy this way?
+The *operating*system* allows our applications to safely interface with and share the hardware.
 
 * Cloud Deployment
 
-- Hardware
-- Hypervisor
-- Operating Systems
-- *User*Applications*
+Works like conventional deployment, except multi-tenant.
 
-Hypervisors allow operating systems to share hardware.
+A *hypervisor* allows *multiple*operating*systems* to safely interface with and share hardware.
 
-: In the cloud, OSs allow user programs to share shared/virtual hardware
+The *operating*system* duplicates work, allowing user applications to share hardware that's already shared (or even virtualized).
 
-* Cloud Deployment without the OS
+If user applications interfaced directly with the hypervisor, we could remove the operating system.
 
-- Hardware
-- Hypervisor
-- *User*Applications*
+* What would we give up?
 
-: This actually looks a lot like the conventional deployment.
+Operating systems do a lot more than manage hardware.
 
-* What do we give up?
+They provide a *general*purpose*computing*environment*. Shell scripting, Cron jobs, terminal sessions, POSIX.
 
-Operating systems to a lot more than manage hardware:
+They are built on established, understood tools and have years (or decades) of development and production time.
 
-- General purpose computing environment: POSIX, shell scripting
-- Familiar tools, like SSH
-
-: POSIX, shell scripting...
-: No SSH The flip side...
-
-On the other hand...
-
-* Operating systems are huge
+* Operating systems are large projects
 
 Typical server deployments have can 500+ packages built from *100,000,000+* lines of source code.
 
 The Linux Kernel alone is *15,000,000+* lines of code.
-
-: There's a lot going on, much of it irrelevant:
-: Don't need the drivers for unused hardware
-: Don't need the software from user applications
 
 These strongly impact:
 
