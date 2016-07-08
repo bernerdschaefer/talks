@@ -60,13 +60,15 @@ They take a number of forms. Some are for OS research. Others target particular 
 
 It allows you to cross-compile Go programs, just like for Linux and Windows, to run directly on the Xen hypervisor.
 
-The compiled images can be deployed on Amazon EC2, Linode, Rackspace, and IBM SoftLayer.
+The images can be deployed on Amazon EC2, Linode, Rackspace, and IBM SoftLayer.
 
-There are a few pieces to AtmanOS:
+There are a few components:
 
 - a microkernel implemented in Go (and a little assembly)
-- a suite of system packages, for communicating with Xen, reading and writing network packets, etc.
-- a port of Go's runtime and standard library
+- a suite of packages for communicating with Xen, reading and writing network packets, etc.
+- a port of Go's runtime and standard library to the microkernel and system packages
+
+It's currently around *3,000* lines of Go and *150* lines of Assembly.
 
 * Porting Go
 
