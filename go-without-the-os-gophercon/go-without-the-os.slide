@@ -102,9 +102,29 @@ In the `runtime` package, that's adapter functions for memory management, time, 
 
 For the standard library, it's `syscall` functions, network types, etc.
 
-* Example
+* Example: processing network request packets
 
-* DEMO
+* Setup
+
+`atman/net` initializes a default network device.
+
+.code net_example.go /package main/,/^}/
+
+* Handle events
+
+Xen sends notifications over an `EventChannel` when network packets are ready to be processed.
+
+.code net_example.go /func handleEvents/,/^}/
+
+* Initialize packet reader
+
+.code net_example.go /func newPacketReader/,/^}/
+
+* Process packet
+
+.code net_example.go /func processRxPacket/,/^}/
+
+* Demo
 
 * What's next?
 
