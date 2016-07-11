@@ -18,10 +18,6 @@ func main() {
 	handleEvents(dev)
 }
 
-const (
-	NETIF_RSP_NULL = 1
-)
-
 func handleEvents(dev *anet.Device) {
 	for {
 		dev.EventChannel.Wait()
@@ -34,8 +30,6 @@ func handleEvents(dev *anet.Device) {
 
 			processRxPacket(dev, r)
 		}
-
-		dev.Rx.PushRequests()
 	}
 }
 
