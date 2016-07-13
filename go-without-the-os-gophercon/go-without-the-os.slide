@@ -1,4 +1,5 @@
 Go without the Operating System
+12 July 2016
 
 Bernerd Schaefer
 Developer at thoughtbot
@@ -103,6 +104,46 @@ In the `runtime` package, that's adapter functions for memory management, time, 
 For the standard library, it's `syscall` functions, network types, etc.
 
 * Demo: low-level networking
+
+* Accessing the network device
+
+`atamn/net` implements Xen's network device interface, leveraging other AtmanOS packages like `atman/mm` and `atman/xen`.
+
+Enables user-space programs to talk directly to the network device, for example, to read ethernet packets directly from the device.
+
+`github.com/atmanos/example/net` is a program which does exactly that.
+
+* Building the example program
+
+AtmanOS provides an `atman` command which wraps `go` with the appropriate flags for building our program:
+
+  > atman build github.com/atmanos/example/net
+
+The build artifact is an ELF executable, with a few special notes so Xen knows how to load it.
+
+  > file net
+  net: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
+
+  > greadelf --sections net | grep Xen
+    [12] .note.Xen.loader  NOTE             0000000000400fb0  00000fb0
+    [13] .note.Xen.version NOTE             0000000000400f98  00000f98
+    [14] .note.Xen.hyperca NOTE             0000000000400f80  00000f80
+
+* Run the example
+
+The `net` executable can be run from a Xen host using `xl`, or AtmanOS's helper script `startvm`.
+
+Start the `net` program with a bridge network device configured and connect to the console:
+
+  > startvm net -c 'vif = ["bridge = xenbr0"]'
+  Network device initialized:
+    Mac address: 00:16:3e:4d:4e:04
+    IP address:  ENOENT
+
+If we ping the MAC accress with `arping -i xenbr0 00:16:3e:4d:4e:04`, we see some packets printed:
+
+  rx: packet from="08:00:27:a2:0c:15" to="00:16:3e:0a:bc:a1" type=0x0800 (IPV4)
+  rx: packet from="08:00:27:a2:0c:15" to="00:16:3e:0a:bc:a1" type=0x0800 (IPV4)
 
 * Project status
 
